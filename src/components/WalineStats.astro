@@ -1,0 +1,75 @@
+---
+/**
+ * Waline page statistics: pageview (reading count) + comment count.
+ * Docs: https://waline.js.org/guide/features/pageview.html
+ *
+ * Renders two counters that Waline fills in on the client:
+ *   .waline-pageview-count  -> reading count for the current path
+ *   .waline-comment-count   -> number of comments for the current path
+ *
+ * No `data-path` is set, so both counters use `location.pathname` as the key,
+ * matching the Comments.astro thread key for the same post.
+ */
+import { WALINE_SERVER_URL } from "@/utils/waline";
+import IconBook from "@/assets/icons/IconBook.svg";
+import IconMessageCircle from "@/assets/icons/IconMessageCircle.svg";
+
+interface Props {
+  /** Waline server URL. */
+  serverURL?: string;
+  /** Extra classes for the wrapper. */
+  class?: string;
+}
+
+const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    "waline-stats text-muted-foreground inline-flex items-center gap-3 text-sm whitespace-nowrap",
+    className,
+  ]}
+  data-server-url={serverURL}
+>
+  <span class="inline-flex items-center gap-1" title="阅读量">
+    <IconBook width={16} height={16} aria-hidden="true" />
+    <span class="waline-pageview-count">–</span> 次阅读
+  </span>
+  <span class="inline-flex items-center gap-1" title="评论数">
+    <IconMessageCircle width={16} height={16} aria-hidden="true" />
+    <span class="waline-comment-count">–</span> 条评论
+  </span>
+</span>
+
+<script>
+  import { pageviewCount, commentCount } from "@waline/client";
+
+  let aborts: Array<(() => void) | undefined> = [];
+  let lastPath = "";
+
+  function runStats() {
+    const el = document.querySelector<HTMLElement>(".waline-stats");
+    if (!el) return;
+    const serverURL = el.dataset.serverUrl;
+    if (!serverURL) return;
+    // Avoid double-counting if this fires more than once for the same page.
+    if (location.pathname === lastPath) return;
+    lastPath = location.pathname;
+
+    aborts.forEach(a => a?.());
+    aborts = [
+      pageviewCount({ serverURL }),
+      commentCount({ serverURL }),
+    ];
+  }
+
+  // Run on initial load and on every client-side navigation; the lastPath
+  // guard keeps it from counting the same page twice.
+  runStats();
+  document.addEventListener("astro:page-load", runStats);
+  document.addEventListener("astro:before-swap", () => {
+    aborts.forEach(a => a?.());
+    aborts = [];
+    lastPath = "";
+  });
+</script>

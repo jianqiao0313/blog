@@ -4,8 +4,9 @@
  * Docs: https://waline.js.org/
  *
  * The server is a self-hosted Waline instance. Override the URL per-project
- * by editing `serverURL` below.
+ * by editing `WALINE_SERVER_URL` in `src/utils/waline.ts`.
  */
+import { WALINE_SERVER_URL } from "@/utils/waline";
 
 interface Props {
   /** Waline server URL. */
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const {
-  serverURL = "https://comments.xiaogezi.fun/",
+  serverURL = WALINE_SERVER_URL,
   path,
   class: className,
 } = Astro.props;
@@ -28,7 +29,7 @@ const {
     id="waline"
     data-server-url={serverURL}
     data-path={path}
-    class="app-prose max-w-app"
+    class="max-w-app"
   >
   </div>
 </section>
@@ -56,7 +57,9 @@ const {
       // Match AstroPaper's dark mode: <html> gets the `dark` class.
       dark: "html.dark",
       lang: document.documentElement.lang || "en",
-      // Reaction emoji shown above the comment box.
+      // Article reaction emojis (👍 etc.) shown above the comment box.
+      reaction: true,
+      // Emoji picker for the comment input.
       emoji: [
         "https://unpkg.com/@waline/emojis@1.2.0/weibo",
         "https://unpkg.com/@waline/emojis@1.2.0/tieba",
