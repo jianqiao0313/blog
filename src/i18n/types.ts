@@ -30,6 +30,8 @@ export interface UIStrings {
     featured: string;
     recentPosts: string;
     allPosts: string;
+    socialFollow: string;
+    socialEmail: string;
   };
   footer: {
     copyright: string;

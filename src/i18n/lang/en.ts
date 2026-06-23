@@ -32,6 +32,8 @@ export default {
     featured: "Featured",
     recentPosts: "Recent Posts",
     allPosts: "All Posts",
+    socialFollow: "{{name}} on {{platform}}",
+    socialEmail: "Send an email to {{name}}",
   },
   footer: {
     copyright: "Copyright",
