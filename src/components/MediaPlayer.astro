@@ -1,0 +1,98 @@
+---
+/**
+ * Media player powered by Plyr.
+ * Docs: https://github.com/sampotts/plyr
+ *
+ * Supports HTML5 video/audio plus YouTube and Vimeo embeds. The accent color
+ * follows the site theme.
+ */
+
+interface Props {
+  /** Source kind. */
+  type?: "video" | "audio" | "youtube" | "vimeo";
+  /**
+   * Source. For `video`/`audio` a media URL; for `youtube`/`vimeo` the
+   * video id or full watch URL.
+   */
+  src: string;
+  /** Poster image (video only). */
+  poster?: string;
+  /** MIME type for HTML5 sources (defaults based on `type`). */
+  mime?: string;
+  class?: string;
+}
+
+const { type = "video", src, poster, mime, class: className } = Astro.props;
+
+const isEmbed = type === "youtube" || type === "vimeo";
+const videoMime = mime ?? "video/mp4";
+const audioMime = mime ?? "audio/mpeg";
+---
+
+<div class:list={["plyr-mount not-prose", className]}>
+  {
+    type === "video" && (
+      <video class="plyr-media" playsinline controls poster={poster}>
+        <source src={src} type={videoMime} />
+      </video>
+    )
+  }
+  {
+    type === "audio" && (
+      <audio class="plyr-media" controls>
+        <source src={src} type={audioMime} />
+      </audio>
+    )
+  }
+  {
+    isEmbed && (
+      <div
+        class="plyr-media"
+        data-plyr-provider={type}
+        data-plyr-embed-id={src}
+      />
+    )
+  }
+</div>
+
+<style is:global>
+  /* Tie Plyr's accent to the site theme. */
+  .plyr {
+    --plyr-color-main: var(--accent);
+  }
+</style>
+
+<script>
+  import Plyr from "plyr";
+  import "plyr/dist/plyr.css";
+
+  const instances: Plyr[] = [];
+
+  function initPlayers() {
+    const media = document.querySelectorAll<HTMLElement>(
+      ".plyr-mount .plyr-media"
+    );
+    media.forEach(el => {
+      if (el.dataset.initialized) return;
+      el.dataset.initialized = "true";
+      instances.push(new Plyr(el));
+    });
+  }
+
+  function destroyPlayers() {
+    while (instances.length) {
+      try {
+        instances.pop()?.destroy();
+      } catch {
+        /* already gone */
+      }
+    }
+  }
+
+  // Run now (module scripts are deferred, so the DOM is ready) to cover the
+  // initial load, then on every client-side navigation. `initPlayers` is
+  // idempotent via the `data-initialized` guard, so double-calls are no-ops.
+  initPlayers();
+  document.addEventListener("astro:page-load", initPlayers);
+  document.addEventListener("astro:before-swap", destroyPlayers);
+</script>

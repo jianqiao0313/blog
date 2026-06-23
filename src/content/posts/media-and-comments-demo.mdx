@@ -1,0 +1,132 @@
+---
+title: "Feature Preview: Waline Comments, APlayer & Plyr"
+author: Sat Naing
+pubDatetime: 2026-06-22T08:00:00Z
+featured: true
+draft: false
+tags:
+  - guide
+  - media
+  - comments
+description: "A live preview of the three integrations added to this site: Waline comments, the APlayer audio player, and the Plyr media player."
+---
+
+import AudioPlayer from "@/components/AudioPlayer.astro";
+import MediaPlayer from "@/components/MediaPlayer.astro";
+
+This page is a live preview of the three integrations added to the theme:
+
+1. **[Waline](https://waline.js.org/)** — a lightweight, self-hosted comment system.
+2. **[APlayer](https://aplayer.js.org/)** — a beautiful HTML5 music player.
+3. **[Plyr](https://github.com/sampotts/plyr)** — an accessible video/audio player.
+
+All three are reusable Astro components. Scroll down to try each one.
+
+## Table of contents
+
+## APlayer — audio player
+
+`AudioPlayer.astro` wraps [APlayer](https://aplayer.js.org/). Pass a single
+track or a playlist. The player's theme color follows the site accent.
+
+### Single track
+
+<AudioPlayer
+  audio={{
+    name: "SoundHelix Song 1",
+    artist: "SoundHelix",
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    cover: "https://picsum.photos/seed/astropaper-audio/240/240",
+  }}
+/>
+
+### Playlist (folded)
+
+<AudioPlayer
+  listFolded
+  audio={[
+    {
+      name: "SoundHelix Song 2",
+      artist: "SoundHelix",
+      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      cover: "https://picsum.photos/seed/track2/240/240",
+    },
+    {
+      name: "SoundHelix Song 3",
+      artist: "SoundHelix",
+      url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      cover: "https://picsum.photos/seed/track3/240/240",
+    },
+  ]}
+/>
+
+Usage:
+
+```astro
+---
+import AudioPlayer from "@/components/AudioPlayer.astro";
+---
+
+<AudioPlayer
+  audio={{
+    name: "Track name",
+    artist: "Artist",
+    url: "/audio/song.mp3",
+    cover: "/audio/cover.jpg",
+  }}
+/>
+```
+
+## Plyr — media player
+
+`MediaPlayer.astro` wraps [Plyr](https://github.com/sampotts/plyr). It supports
+`video`, `audio`, `youtube`, and `vimeo` sources.
+
+### HTML5 video
+
+<MediaPlayer
+  type="video"
+  src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"
+  poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg"
+/>
+
+### HTML5 audio
+
+<MediaPlayer
+  type="audio"
+  src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3"
+/>
+
+### YouTube embed
+
+<MediaPlayer type="youtube" src="bTqVqk7FSmY" />
+
+Usage:
+
+```astro
+---
+import MediaPlayer from "@/components/MediaPlayer.astro";
+---
+
+<MediaPlayer type="video" src="/video/clip.mp4" poster="/video/poster.jpg" />
+<MediaPlayer type="youtube" src="bTqVqk7FSmY" />
+```
+
+## Waline — comments
+
+The **Waline** comment box is mounted automatically at the bottom of every post
+page (this one included). Connected server:
+[`https://comments.xiaogezi.fun/`](https://comments.xiaogezi.fun/).
+
+It is implemented as `Comments.astro` and added to the post layout, so you don't
+need to import it per-post. To use it elsewhere:
+
+```astro
+---
+import Comments from "@/components/Comments.astro";
+---
+
+<Comments serverURL="https://comments.xiaogezi.fun/" />
+```
+
+👇 **Scroll to the very bottom of this page to see the live comment box.**

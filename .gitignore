@@ -31,3 +31,9 @@ public/pagefind
 
 # docker compose
 compose.override.yaml
+
+# oh-my-claudecode orchestration state
+.omc/
+
+# claude code local machine settings
+.claude/settings.local.json
