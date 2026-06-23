@@ -1,0 +1,46 @@
+---
+/**
+ * Staff-notation rendering for posts.
+ *
+ * `remarkAbcMusic` converts ```abc fenced blocks into
+ * <div class="abc-music" data-abc="..."> at build time; this component renders
+ * them into SVG with abcjs on the client and tints them to the theme color so
+ * they stay visible in both light and dark mode.
+ */
+---
+
+<script>
+  import abcjs from "abcjs";
+
+  function renderAbcBlocks() {
+    document.querySelectorAll<HTMLElement>(".abc-music").forEach(el => {
+      if (el.dataset.abcRendered) return;
+      const abc = el.getAttribute("data-abc");
+      if (!abc) return;
+      el.dataset.abcRendered = "true";
+      abcjs.renderAbc(el, abc, { responsive: "resize", add_classes: true });
+    });
+  }
+
+  renderAbcBlocks();
+  document.addEventListener("astro:page-load", renderAbcBlocks);
+</script>
+
+<style is:global>
+  .abc-music {
+    color: var(--foreground);
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .abc-music svg {
+    max-width: 100%;
+    height: auto;
+  }
+  /* abcjs draws notes, staff lines, stems and labels with explicit fills;
+     tint them to the theme text color so notation is visible in dark mode. */
+  .abc-music svg path,
+  .abc-music svg text,
+  .abc-music svg ellipse {
+    fill: currentColor !important;
+  }
+</style>

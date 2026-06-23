@@ -16,6 +16,7 @@ import BackToTopButton from "./_components/BackToTopButton.astro";
 import AdjacentPostNav from "./_components/AdjacentPostNav.astro";
 import Comments from "@/components/Comments.astro";
 import WalineStats from "@/components/WalineStats.astro";
+import AbcMusic from "@/components/AbcMusic.astro";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -163,6 +164,8 @@ const ogImage = ogImageUrl
     <AdjacentPostNav {prevPost} {nextPost} />
 
     <hr class="my-8 border-dashed" />
+
+    <AbcMusic />
 
     <Comments />
   </main>

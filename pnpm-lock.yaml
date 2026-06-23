@@ -23,6 +23,9 @@ importers:
       '@waline/client':
         specifier: ^3.15.2
         version: 3.15.2(typescript@6.0.3)
+      abcjs:
+        specifier: ^6.6.3
+        version: 6.6.3
       aplayer:
         specifier: ^1.10.1
         version: 1.10.1
@@ -1126,6 +1129,9 @@ packages:
   '@waline/client@3.15.2':
     resolution: {integrity: sha512-QBAVbruefDR+IKyQdM/Ao9fd07Xxpx1WEJ7xI8lBVNDjMQBr1PpdwrTpLC8RrYbgUR9ymNBvtLDJi0xK3pbORQ==}
     engines: {node: '>=22'}
+
+  abcjs@6.6.3:
+    resolution: {integrity: sha512-BerGJCY8+pvJV1+VxZn1Y/VNcuSAk8BysCbBICY0W8fgE5g4W6sA/zB5pKxcgqzY5/gObh8ugl++4ZoaTqUCkw==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3962,6 +3968,8 @@ snapshots:
       vue: 3.5.38(typescript@6.0.3)
     transitivePeerDependencies:
       - typescript
+
+  abcjs@6.6.3: {}
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:

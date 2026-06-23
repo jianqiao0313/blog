@@ -10,6 +10,7 @@ import sitemap from "@astrojs/sitemap";
 import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
+import { remarkAbcMusic } from "./src/utils/remarkAbcMusic";
 import rehypeCallouts from "rehype-callouts";
 import {
   transformerNotationDiff,
@@ -38,6 +39,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkAbcMusic,
         [remarkToc, { heading: "目录|toc|table[ -]of[ -]contents?", maxDepth: 3 }],
         [remarkCollapse, { test: "目录|Table of contents" }],
       ],
