@@ -5,6 +5,7 @@ description: "介绍在 NTFS 格式 U 盘上安装 CentOS 的方法：通过 Win
 tags:
   - "linux"
 ---
+## 目录
 
 ## 目标
 

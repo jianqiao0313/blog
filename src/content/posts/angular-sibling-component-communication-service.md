@@ -5,6 +5,7 @@ description: "介绍在 Angular 4 中使用 RxJS Subject 创建共享 Service，
 tags:
   - "Angular4.0"
 ---
+## 目录
 
 ## 背景
 最近在Taptap上下载一个游戏，叫盗墓长生印，非常有意思，里面有一个小游戏，叫八宝盒，类似于华容道，打算开发一个网页版的自动完成，既然最近在学Angular4.0.0，那就拿Angular4.0开发把。算法我打算用DFS，用Typescript写算法不知道好不好写，二维数组就不怎么好定义。等完成后会放到github上。

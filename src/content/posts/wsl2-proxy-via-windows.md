@@ -5,6 +5,7 @@ description: "介绍如何在WSL2中通过读取resolv.conf获取宿主机IP，�
 tags:
   - "WSL"
 ---
+## 目录
 
 ## 准备工作
 ### V2Ray设置 允许来自互联网的连接

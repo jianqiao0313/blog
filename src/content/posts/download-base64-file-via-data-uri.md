@@ -5,6 +5,7 @@ description: "介绍如何将后台返回的 base64 字符串通过 HTML anchor 
 tags:
   - "JS"
 ---
+## 目录
 
 ## 需求
 后台发来一串base64编码的字符串，是一个xxx.doc文件，现在想让用户点击下载按钮下载。

@@ -6,6 +6,7 @@ tags:
   - "WSL"
   - "React Native"
 ---
+## 目录
 
 ## 背景
 WSL2已经出了一些日子了，对比WSL1，WSL2是跑在虚拟机中的完整 Linux，所以功能方面要比WSL强大一些。并且linux环境刷Node问题会少些，比如node_sass不好安装、NodeModules路径名过长等等。

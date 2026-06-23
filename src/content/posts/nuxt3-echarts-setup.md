@@ -5,6 +5,7 @@ description: "介绍在 Nuxt 3 中集成 vue-echarts 的配置方法，通过 tr
 tags:
   - "nuxt.js"
 ---
+## 目录
 
 ## 背景
 
