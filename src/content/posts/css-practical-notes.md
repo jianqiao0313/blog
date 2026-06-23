@@ -50,7 +50,7 @@ ps:我就觉得这代码没用，有时候用360浏览器打开，IE模式还是
 
 名称 | 类型 | 默认值 | 描述
 ---|---|---|---
-backdrop|boolean 或 字符串 '==**static**==' |true|Includes a modal-backdrop element. Alternatively, specify ==**static**== for a backdrop which doesn't close the modal on click.
+backdrop|boolean 或 字符串 '`static`' |true|Includes a modal-backdrop element. Alternatively, specify `static` for a backdrop which doesn't close the modal on click.
 
 修改backdrop属性有两种方法:
 1. 在模态框上用data-backdrop来实现

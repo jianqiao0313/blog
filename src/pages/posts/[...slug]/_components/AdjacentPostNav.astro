@@ -28,7 +28,7 @@ const t = useTranslations(locale);
         href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
         class="flex w-full gap-1 hover:opacity-75"
       >
-        <IconArrowLeft class="inline-block flex-none rtl:rotate-180" />
+        <IconArrowLeft aria-hidden="true" class="inline-block flex-none rtl:rotate-180" />
         <div>
           <span>{t.post.previousPost}</span>
           <div class="text-accent/85 text-sm">{prevPost.title}</div>
@@ -46,7 +46,7 @@ const t = useTranslations(locale);
           <span>{t.post.nextPost}</span>
           <div class="text-accent/85 text-sm">{nextPost.title}</div>
         </div>
-        <IconArrowRight class="inline-block flex-none rtl:rotate-180" />
+        <IconArrowRight aria-hidden="true" class="inline-block flex-none rtl:rotate-180" />
       </a>
     )
   }

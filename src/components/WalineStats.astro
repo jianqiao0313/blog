@@ -42,9 +42,12 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
 </span>
 
 <script>
-  import { pageviewCount, commentCount } from "@waline/client";
+  // Subpath imports pull only the tiny pageview/comment counters (~a few KB),
+  // not the full @waline/client comment bundle.
+  import { pageviewCount } from "@waline/client/pageview";
+  import { commentCount } from "@waline/client/comment";
 
-  let aborts: Array<(() => void) | undefined> = [];
+  let aborts: Array<() => void> = [];
   let lastPath = "";
 
   function runStats() {
@@ -56,11 +59,19 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
     if (location.pathname === lastPath) return;
     lastPath = location.pathname;
 
-    aborts.forEach(a => a?.());
-    aborts = [
-      pageviewCount({ serverURL }),
-      commentCount({ serverURL }),
-    ];
+    aborts.forEach(a => a());
+    aborts = [];
+
+    // Counts are not LCP-critical — fetch them when the main thread is idle.
+    const fetchCounts = () => {
+      aborts = [pageviewCount({ serverURL }), commentCount({ serverURL })];
+    };
+    if ("requestIdleCallback" in window) {
+      (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void })
+        .requestIdleCallback(fetchCounts, { timeout: 2000 });
+    } else {
+      setTimeout(fetchCounts, 200);
+    }
   }
 
   // Run on initial load and on every client-side navigation; the lastPath
@@ -68,7 +79,7 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
   runStats();
   document.addEventListener("astro:page-load", runStats);
   document.addEventListener("astro:before-swap", () => {
-    aborts.forEach(a => a?.());
+    aborts.forEach(a => a());
     aborts = [];
     lastPath = "";
   });

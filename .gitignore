@@ -37,3 +37,6 @@ compose.override.yaml
 
 # claude code local machine settings
 .claude/settings.local.json
+
+# pnpm is the package manager; keep npm from committing a competing lockfile
+package-lock.json

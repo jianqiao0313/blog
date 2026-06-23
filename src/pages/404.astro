@@ -12,6 +12,8 @@ const t = useTranslations(locale);
 ---
 
 <Layout title={`${t.notFound.title} | ${config.site.title}`}>
+  <meta name="robots" content="noindex, follow" slot="head" />
+
   <Header />
 
   <main

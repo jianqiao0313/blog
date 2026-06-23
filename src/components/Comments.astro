@@ -35,20 +35,27 @@ const {
 </section>
 
 <script>
-  import { init } from "@waline/client";
-  import "@waline/client/style";
+  type WalineInstance = { destroy: () => void } | null;
 
-  let waline: ReturnType<typeof init> | null = null;
+  let waline: WalineInstance = null;
+  let io: IntersectionObserver | null = null;
 
-  function initWaline() {
+  async function initWaline() {
     const el = document.getElementById("waline");
     if (!el || el.dataset.walineInit) return;
 
     const serverURL = el.dataset.serverUrl;
     if (!serverURL) return;
 
-    // Guard so the immediate call + astro:page-load don't double-init.
+    // Guard so the observer + astro:page-load don't double-init.
     el.dataset.walineInit = "true";
+
+    // Load the Waline client (~285KB) + its styles only when the comment
+    // section is about to enter the viewport — most readers never scroll here.
+    const [{ init }] = await Promise.all([
+      import("@waline/client"),
+      import("@waline/client/style"),
+    ]);
 
     waline = init({
       el: "#waline",
@@ -70,13 +77,31 @@ const {
     });
   }
 
-  // Run now (deferred module → DOM ready) for the initial load, then on every
-  // client-side navigation. The `data-waline-init` guard keeps it idempotent.
-  initWaline();
-  document.addEventListener("astro:page-load", initWaline);
+  // Defer loading until the comment box nears the viewport.
+  function observeWaline() {
+    const el = document.getElementById("waline");
+    if (!el || el.dataset.walineInit) return;
+    io?.disconnect();
+    io = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) {
+          io?.disconnect();
+          io = null;
+          initWaline();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    io.observe(el);
+  }
 
-  // Tear down before swapping pages to avoid leaking listeners.
+  observeWaline();
+  document.addEventListener("astro:page-load", observeWaline);
+
+  // Tear down before swapping pages to avoid leaking listeners/observers.
   document.addEventListener("astro:before-swap", () => {
+    io?.disconnect();
+    io = null;
     waline?.destroy();
     waline = null;
   });

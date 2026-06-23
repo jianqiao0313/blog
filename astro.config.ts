@@ -11,6 +11,7 @@ import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import { remarkAbcMusic } from "./src/utils/remarkAbcMusic";
+import { rehypeImgAttrs } from "./src/utils/rehypeImgAttrs";
 import rehypeCallouts from "rehype-callouts";
 import {
   transformerNotationDiff,
@@ -43,7 +44,7 @@ export default defineConfig({
         [remarkToc, { heading: "目录|toc|table[ -]of[ -]contents?", maxDepth: 3 }],
         [remarkCollapse, { test: "目录|Table of contents" }],
       ],
-      rehypePlugins: [rehypeCallouts],
+      rehypePlugins: [rehypeCallouts, rehypeImgAttrs],
     }),
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },

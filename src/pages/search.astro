@@ -28,6 +28,8 @@ const t = useTranslations(locale);
 ---
 
 <Layout title={`${t.pages.searchTitle} | ${config.site.title}`}>
+  <meta name="robots" content="noindex, follow" slot="head" />
+
   <Header />
 
   <Breadcrumb />

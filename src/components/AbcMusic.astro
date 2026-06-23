@@ -10,15 +10,27 @@
 ---
 
 <script>
-  import abcjs from "abcjs";
+  async function renderAbcBlocks() {
+    const blocks = Array.from(
+      document.querySelectorAll<HTMLElement>(".abc-music")
+    ).filter(el => !el.dataset.abcRendered);
+    if (!blocks.length) return;
 
-  function renderAbcBlocks() {
-    document.querySelectorAll<HTMLElement>(".abc-music").forEach(el => {
-      if (el.dataset.abcRendered) return;
+    // Load abcjs (~500KB) only on pages that actually contain notation.
+    const { default: abcjs } = await import("abcjs");
+
+    blocks.forEach(el => {
       const abc = el.getAttribute("data-abc");
-      if (!abc) return;
-      el.dataset.abcRendered = "true";
-      abcjs.renderAbc(el, abc, { responsive: "resize", add_classes: true });
+      if (!abc) {
+        el.remove();
+        return;
+      }
+      try {
+        abcjs.renderAbc(el, abc, { responsive: "resize", add_classes: true });
+        el.dataset.abcRendered = "true";
+      } catch (err) {
+        console.error("abcjs render failed", err);
+      }
     });
   }
 

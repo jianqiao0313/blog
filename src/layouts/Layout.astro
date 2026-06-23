@@ -1,7 +1,6 @@
 ---
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
@@ -24,10 +23,9 @@ const {
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
-const rssHref = getRelativeLocaleUrl(
-  Astro.currentLocale ?? config.site.lang,
-  "rss.xml"
-);
+// Build without a trailing slash so it resolves to the /rss.xml file on
+// static hosting (getRelativeLocaleUrl would append a slash -> /rss.xml/ 404).
+const rssHref = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`;
 ---
 
 <!doctype html>
@@ -40,8 +38,9 @@ const rssHref = getRelativeLocaleUrl(
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="preconnect" href="https://static.gezichenshan.top" />
+    <link rel="dns-prefetch" href="https://static.gezichenshan.top" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Font -->
@@ -64,6 +63,10 @@ const rssHref = getRelativeLocaleUrl(
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content="zh_CN" />
 
     <!-- Twitter / X -->
     <meta property="twitter:card" content="summary_large_image" />

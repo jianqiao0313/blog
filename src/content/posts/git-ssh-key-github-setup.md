@@ -1,5 +1,5 @@
 ---
-title: "future-blog"
+title: "在 Windows 上生成 SSH 密钥并推送 Vue 项目到 GitHub"
 pubDatetime: 2017-10-20T09:12:58+08:00
 description: "介绍如何在 Windows 上生成 SSH 密钥并添加到 GitHub，创建仓库后将 Vue 项目通过 Git 命令推送上去，并邀请协作者加入项目组的完整操作步骤。"
 tags:

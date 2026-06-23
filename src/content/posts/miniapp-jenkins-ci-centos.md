@@ -1,5 +1,5 @@
 ---
-title: "miniapp-jenkins-ci"
+title: "CentOS 上用 Docker 部署 Jenkins（小程序 CI 准备）"
 pubDatetime: 2020-04-06T22:29:09+08:00
 description: "介绍在CentOS 7.4上通过Docker部署Jenkins的完整步骤，包括拉取镜像、创建数据目录、运行容器、获取初始密码及安装推荐插件，为小程序CI持续集成做准备。"
 tags:
