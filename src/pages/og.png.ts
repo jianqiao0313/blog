@@ -3,6 +3,7 @@ import satori from "satori";
 import sharp from "sharp";
 import { fontData, experimental_getFontFileURL } from "astro:assets";
 import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
+import { getCjkFontData } from "@/utils/getCjkFontData";
 import config from "@/config";
 
 export const GET: APIRoute = async context => {
@@ -22,6 +23,11 @@ export const GET: APIRoute = async context => {
       res.arrayBuffer()
     ),
   ]);
+
+  // Fetch a Chinese glyph subset when the rendered text contains CJK.
+  const cjkFonts = await getCjkFontData(
+    `${config.site.title}${config.site.description}${new URL(config.site.url).hostname}`
+  );
 
   const svg = await satori(
     {
@@ -156,6 +162,7 @@ export const GET: APIRoute = async context => {
           weight: 700,
           style: "normal",
         },
+        ...cjkFonts,
       ],
     }
   );
