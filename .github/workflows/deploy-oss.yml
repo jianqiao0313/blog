@@ -65,12 +65,20 @@ jobs:
             exit 0
           fi
 
-          # Content-based incremental upload:
+          # Safety guard: never mirror a possibly empty/broken build over the
+          # live bucket (sync deletes, so an empty dist would wipe the site).
+          if [ ! -f ./dist/index.html ]; then
+            echo "::error::dist/index.html is missing — refusing to sync a possibly empty build."
+            exit 1
+          fi
+
+          # Content-based incremental MIRROR (sync):
           #   --checksum         compare by MD5/ETag, ignore mtime (true incremental)
           #   --fast-list        bulk-list the bucket in one pass (fewer API calls)
           #   --s3-no-check-bucket  don't require bucket-create/head permission
-          #   copy (not sync)    additive — never deletes objects already in the bucket
-          rclone copy ./dist "OSS:jianqiao0313-blog" \
+          #   sync               mirror dist/ -> bucket: uploads changed files AND
+          #                      deletes bucket objects no longer present in dist
+          rclone sync ./dist "OSS:jianqiao0313-blog" \
             --checksum \
             --fast-list \
             --s3-no-check-bucket \
