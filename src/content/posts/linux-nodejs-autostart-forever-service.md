@@ -3,7 +3,8 @@ title: "linux开启启动nodejs服务"
 pubDatetime: 2018-03-06T15:59:58+08:00
 description: "介绍在 Linux 服务器上通过 forever 和 forever-service 将 Node.js 应用注册为系统服务并实现开机自启，包含服务注册、启停命令及常见失败方法总结。"
 tags:
-  - "Nodejs"
+  - "Node.js"
+  - "Linux"
 ---
 ## 目录
 

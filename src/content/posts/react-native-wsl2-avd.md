@@ -3,8 +3,8 @@ title: "Window AVD + WSL2上运行React Native"
 pubDatetime: 2020-11-15T21:38:39+08:00
 description: "介绍在 Windows 下通过 WSL2 运行 React Native 开发环境的完整配置流程，包括 WSL2 中安装 Android SDK、将 Windows ADB 映射到 WSL2、以及利用 netsh 端口转发让模拟器访问 Metro Bundler。"
 tags:
-  - "WSL"
   - "React Native"
+  - "WSL"
 ---
 ## 目录
 

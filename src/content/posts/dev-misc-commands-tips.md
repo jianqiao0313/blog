@@ -3,7 +3,7 @@ title: "杂"
 pubDatetime: 2018-06-05T22:32:00+08:00
 description: "收录常用开发命令速查：GitHub 加速克隆、git 关闭 SSL 验证、npm 切换淘宝镜像、Beyond Compare 去除 .orig 文件，以及 GitKraken 下载地址、禁用更新和卸载残留路径。"
 tags:
-  - "mixed"
+  - "Git"
 ---
 ## 目录
 

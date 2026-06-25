@@ -3,7 +3,7 @@ title: "用nodejs写个最简单的爬虫"
 pubDatetime: 2017-08-24T08:53:03+08:00
 description: "用 Node.js 结合 superagent、cheerio 和正则表达式，实现一个爬取漫画网站图片的简易爬虫，涵盖 GBK 编码处理、异步闭包循环与定时器限速下载。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 ## 目录
 

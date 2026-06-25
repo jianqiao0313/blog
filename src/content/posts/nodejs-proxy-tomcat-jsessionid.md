@@ -3,7 +3,7 @@ title: "前后端分离 Nodejs作为Webserver 转发请求给Tomcat"
 pubDatetime: 2017-04-25T17:04:12+08:00
 description: "介绍前后端分离架构中，用 Node.js + Express 作为 Web 服务器，通过原生 http 模块转发请求至 Tomcat，并提取响应头中的 JSESSIONID 写入全局变量、在后续请求的 Cookie 中携带，以实现跨服务的登录态保持。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 ## 目录
 

@@ -3,7 +3,7 @@ title: "nuxt.js 3.0配置echarts"
 pubDatetime: 2023-06-26T20:35:12+08:00
 description: "介绍在 Nuxt 3 中集成 vue-echarts 的配置方法，通过 transpile 转译 echarts/zrender/tslib/resize-detector，并用 client-only 包裹图表组件，同时记录了构建时 tslib 模块缺失和 resize-detector ESM 命名导出两个报错的解决方案。"
 tags:
-  - "nuxt.js"
+  - "Nuxt.js"
 ---
 ## 目录
 

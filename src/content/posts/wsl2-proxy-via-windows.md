@@ -3,6 +3,7 @@ title: "WSL2中设置使用windows的代理"
 pubDatetime: 2020-11-22T11:49:44+08:00
 description: "介绍如何在WSL2中通过读取resolv.conf获取宿主机IP，编写start_proxy.sh和stop_proxy.sh脚本来开启和关闭Windows V2Ray代理的环境变量配置方法。"
 tags:
+  - "代理"
   - "WSL"
 ---
 ## 目录

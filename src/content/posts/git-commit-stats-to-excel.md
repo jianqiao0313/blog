@@ -3,7 +3,7 @@ title: "统计git提交次数"
 pubDatetime: 2020-06-14T20:10:07+08:00
 description: "介绍如何通过 git log 命令结合 Shell 脚本统计仓库各成员的提交次数与增删行数，并用 Node.js 的 node-xlsx 将按月汇总的结果导出为 Excel 文件。"
 tags:
-  - "git"
+  - "Git"
 ---
 ## 目录
 

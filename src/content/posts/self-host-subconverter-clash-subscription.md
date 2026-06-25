@@ -3,11 +3,7 @@ title: "自建subconverter把justmysocks转链到ClashForAndroid"
 pubDatetime: 2022-06-22T13:13:13+08:00
 description: "介绍如何在 Linux 服务器上自建 subconverter 订阅转换服务（含 systemctl 自启和 nginx HTTPS 反代），并配套部署 sub-web 图形化前端，将 JustMySocks 订阅链接转换为 ClashForAndroid 可识别格式。"
 tags:
-  - "subconverter"
-  - "justmysocks"
-  - "clash"
-  - "订阅"
-  - "subscribe"
+  - "代理"
 ---
 ## 目录
 

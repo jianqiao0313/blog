@@ -3,7 +3,7 @@ title: "Angular4 IE9 文件上传--记一次捣鼓经历"
 pubDatetime: 2017-06-23T16:56:40+08:00
 description: "记录在 Angular 4 项目中解决 IE9 文件上传报错\"对象不支持 apply 方法\"的过程，最终通过引入 jQuery 的 ajaxfileupload.js 插件替代原生 FormData 请求实现兼容。"
 tags:
-  - "Angular4.0"
+  - "Angular"
 ---
 ## 目录
 

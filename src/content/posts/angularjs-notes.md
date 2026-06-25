@@ -4,7 +4,6 @@ pubDatetime: 2017-04-20T16:59:10+08:00
 description: "介绍 AngularJS 1.5.8 常用技巧，包括获取 scope 对象、ng-class/ng-switch 用法、select 绑定、键盘事件处理，以及 angular-ui、ngSweetAlert、loading-bar、validation 四个推荐插件的使用方法。"
 tags:
   - "Angular"
-  - "JS"
 ---
 ## 目录
 

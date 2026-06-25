@@ -3,7 +3,7 @@ title: "调试你的nodejs"
 pubDatetime: 2020-05-31T21:44:34+08:00
 description: "介绍通过 VSCode launch.json 配置和 Chrome DevTools（node --inspect-brk）两种方式调试 Node.js CLI 程序（以 jscodeshift 和 Egg.js 为例）的具体步骤。"
 tags:
-  - "nodejs"
+  - "Node.js"
 ---
 ## 目录
 

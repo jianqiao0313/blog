@@ -3,7 +3,7 @@ title: "Angular4.0 两个兄弟组件通过服务通讯"
 pubDatetime: 2017-05-10T09:02:22+08:00
 description: "介绍在 Angular 4 中使用 RxJS Subject 创建共享 Service，实现两个兄弟组件（Main 与 FooterButton）之间事件通信的完整步骤与代码示例。"
 tags:
-  - "Angular4.0"
+  - "Angular"
 ---
 ## 目录
 

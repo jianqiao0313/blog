@@ -3,7 +3,7 @@ title: "Nodejs接收Tomcat发来的二进制流并让客户端下载"
 pubDatetime: 2017-04-27T16:48:07+08:00
 description: "介绍在 Node.js + Express 作为代理服务器时，如何用 Buffer.concat 正确接收 Tomcat 返回的 Excel 二进制流，并设置响应头让浏览器触发文件下载，同时记录了编码转换导致乱码的踩坑过程。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 ## 目录
 

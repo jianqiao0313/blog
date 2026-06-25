@@ -3,7 +3,7 @@ title: "windows powershell 代理配置"
 pubDatetime: 2022-02-19T21:38:54+08:00
 description: "介绍在 Windows 的 PowerShell、Git Bash、CMD 以及 macOS 的 zsh 中配置 V2Ray 代理的命令，涵盖查看、设置和取消代理的具体方法。"
 tags:
-  - "windows"
+  - "代理"
 ---
 ## 目录
 

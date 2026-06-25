@@ -3,7 +3,7 @@ title: "Angular动态表单校验"
 pubDatetime: 2017-10-17T16:17:00+08:00
 description: "介绍在 Angular 4 中实现动态表单校验的方案：通过自定义校验函数根据某字段值决定其他字段是否必填，并在字段变更时手动调用 updateValueAndValidity 触发重新校验。"
 tags:
-  - "Angular4.0"
+  - "Angular"
 ---
 ## 目录
 

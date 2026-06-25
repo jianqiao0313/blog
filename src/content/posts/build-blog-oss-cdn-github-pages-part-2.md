@@ -3,7 +3,7 @@ title: "OSS+CDN+GithubPages搭建自己的博客-下"
 pubDatetime: 2019-12-08T21:17:45+08:00
 description: "详解用阿里云OSS存储博客静态文件、编写Node.js脚本自动上传、配置CDN加速与CNAME域名解析、申请SSL证书开启HTTPS，完成博客加速部署全流程。"
 tags:
-  - "others"
+  - "博客"
 ---
 ## 目录
 

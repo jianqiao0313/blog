@@ -3,7 +3,8 @@ title: "OSS-CDN-travisCI-自动化部署你的博客"
 pubDatetime: 2020-05-18T22:49:04+08:00
 description: "介绍如何配置Travis CI，在Hexo博客的hexo分支提交代码后自动执行构建、部署到GitHub Pages并将静态资源上传至阿里云OSS，实现全流程自动化发布。"
 tags:
-  - "others"
+  - "博客"
+  - "CI/CD"
 ---
 ## 目录
 

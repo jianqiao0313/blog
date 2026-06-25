@@ -3,7 +3,7 @@ title: "ntfs格式的U盘安装centos"
 pubDatetime: 2020-01-23T18:56:44+08:00
 description: "介绍在 NTFS 格式 U 盘上安装 CentOS 的方法：通过 WinPE 工具划分 EXT4 分区存放镜像，利用大白菜启动自定义 ISO，并通过 TAB 修改内核参数指定镜像路径完成安装。"
 tags:
-  - "linux"
+  - "Linux"
 ---
 ## 目录
 

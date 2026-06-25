@@ -3,7 +3,7 @@ title: "npm和yarn mirror配置"
 pubDatetime: 2020-11-15T12:42:57+08:00
 description: "介绍如何通过命令行将 npm 和 yarn 的 registry、electron、node-sass、phantomjs 等依赖镜像源统一切换为淘宝镜像，以提升国内安装速度。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 
 ```

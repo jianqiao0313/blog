@@ -3,7 +3,7 @@ title: "让用户下载后台发来的base64字符串"
 pubDatetime: 2017-12-05T10:22:40+08:00
 description: "介绍如何将后台返回的 base64 字符串通过 HTML anchor 标签的 data URI 方式触发文件下载，并记录了 atob+Blob 方案因解码乱码而失败的排查过程。"
 tags:
-  - "JS"
+  - "JavaScript"
 ---
 ## 目录
 

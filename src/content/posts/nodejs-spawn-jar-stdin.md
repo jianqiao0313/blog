@@ -3,7 +3,7 @@ title: "Nodejs调用jar并输入"
 pubDatetime: 2017-08-30T16:44:10+08:00
 description: "介绍如何在 Node.js 中用 child_process.spawn 调用 Java jar 文件，并通过 stdin.write 配合 setTimeout 定时向子进程模拟交互式输入参数。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 ## 目录
 

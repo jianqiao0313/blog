@@ -3,7 +3,7 @@ title: "OSS+CDN+GithubPages搭建自己的博客-上"
 pubDatetime: 2019-11-27T19:50:57+08:00
 description: "介绍如何创建 GitHub Pages 仓库、安装 Hexo 并配置 Butterfly 主题，最终通过 hexo g -d 将静态博客部署到 GitHub Pages 的完整步骤。"
 tags:
-  - "others"
+  - "博客"
 ---
 ## 目录
 

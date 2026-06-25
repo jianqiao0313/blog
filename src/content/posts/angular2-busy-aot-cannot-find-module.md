@@ -3,7 +3,7 @@ title: "Angular2-busy引发的Cannot find module(ng build --aot)"
 pubDatetime: 2017-07-25T09:02:50+08:00
 description: "文章记录了在 Angular4 项目中使用 angular2-busy 插件后，执行 ng build --aot 构建时懒加载路由报 cannot find module 错误的原因（插件不兼容 AOT）及最终解决方案（移除该插件），并列举了尝试过的三种无效排查路径。"
 tags:
-  - "Angular4.0"
+  - "Angular"
 ---
 ## 目录
 

@@ -3,7 +3,7 @@ title: "nodejs搭建接口服务器和mysql增删改查"
 pubDatetime: 2019-01-11T16:34:27+08:00
 description: "介绍如何用express-generator搭建Node.js接口服务器，配合mysql npm包连接数据库，实现对MySQL表的单条与多条数据增删改查，并配合Postman验证接口。"
 tags:
-  - "Nodejs"
+  - "Node.js"
 ---
 ## 目录
 
