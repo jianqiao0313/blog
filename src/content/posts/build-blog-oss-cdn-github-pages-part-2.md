@@ -7,9 +7,9 @@ tags:
 ---
 ## 目录
 
-## [OSS-CDN-GithubPages搭建自己的博客-上](https://lvjianqiao.top/2019/11/27/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8A/index.html)
+## [OSS-CDN-GithubPages搭建自己的博客-上](https://lvjianqiao.com/2019/11/27/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8A/index.html)
 
-## [demo体验](https://lvjianqiao.top)
+## [demo体验](https://lvjianqiao.com)
 
 ## 准备工作
 
@@ -177,5 +177,5 @@ list();
 
 ## 2020年5月18日更新
 
-第10条，OSS目前已更新了子目录首页的功能，只需要开通子目录首页，访问 **https://lvjianqiao.top/archives/** 的路径，就会自动指向 **https://lvjianqiao.top/archives/index.html了** 。
+第10条，OSS目前已更新了子目录首页的功能，只需要开通子目录首页，访问 **https://lvjianqiao.com/archives/** 的路径，就会自动指向 **https://lvjianqiao.com/archives/index.html了** 。
 ![image](https://static.gezichenshan.top/blog/cdn-oss-githubPages/29.png)

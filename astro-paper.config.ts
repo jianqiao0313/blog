@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://lvjianqiao.top",
+    url: "https://lvjianqiao.com",
     title: "jianqiao0313",
     description: "前端开发笔记 —— 记录 Angular、Node.js、CSS、Linux 与构建工具的实践和踩坑。",
     author: "吕健侨",

@@ -11,9 +11,9 @@ tags:
 
 之前写了两篇OSS-CDN-GithubPage的部署教程，如果没看的请戳下面的链接，本次教程是接着原教程写的。
 
-[OSS-CDN-GithubPages搭建自己的博客-上](https://lvjianqiao.top/2019/11/27/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8A/index.html)
+[OSS-CDN-GithubPages搭建自己的博客-上](https://lvjianqiao.com/2019/11/27/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8A/index.html)
 
-[OSS-CDN-GithubPages搭建自己的博客-下](https://lvjianqiao.top/2019/12/08/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8B/index.html)
+[OSS-CDN-GithubPages搭建自己的博客-下](https://lvjianqiao.com/2019/12/08/OSS-CDN-GithubPages%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2-%E4%B8%8B/index.html)
 
 ## 背景
 

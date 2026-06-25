@@ -2,7 +2,7 @@
 
 吕健侨的个人技术博客，记录前端开发中的笔记与踩坑，主题涵盖 Angular、Node.js、CSS、Linux、构建工具与各种工程实践。文章大多由早期的 Hexo 博客迁移而来。
 
-- 线上地址：<https://lvjianqiao.top>
+- 线上地址：<https://lvjianqiao.com>
 - 作者：吕健侨（[@jianqiao0313](https://github.com/jianqiao0313)）
 
 ## 技术栈
