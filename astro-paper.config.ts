@@ -3,9 +3,9 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://lvjianqiao.com",
-    title: "jianqiao0313",
-    description: "前端开发笔记 —— 记录 Angular、Node.js、CSS、Linux 与构建工具的实践和踩坑。",
-    author: "吕健侨",
+    title: "原汤化原食",
+    description: "给搬砖路上搞点乐子",
+    author: "原汤化原食",
     profile: "https://github.com/jianqiao0313",
     ogImage: "og-image.jpg",
     lang: "zh",
@@ -29,15 +29,17 @@ export default defineAstroPaperConfig({
     search: "pagefind",
   },
   socials: [
+    { name: "bilibili", url: "https://space.bilibili.com/326994795"},
+    { name: "youtube", url: "https://www.youtube.com/@yuantanghuayuanshia"},
     { name: "github", url: "https://github.com/jianqiao0313" },
-    { name: "mail",   url: "mailto:jianqiao0313@gmail.com" },
+    { name: "mail",   url: "mailto:jianqiao0313@126.com" },
   ],
   shareLinks: [
-    { name: "whatsapp", url: "https://wa.me/?text=" },
-    { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
-    { name: "x",        url: "https://x.com/intent/post?url=" },
-    { name: "telegram", url: "https://t.me/share/url?url=" },
-    { name: "pinterest", url: "https://pinterest.com/pin/create/button/?url=" },
-    { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
+    // { name: "whatsapp", url: "https://wa.me/?text=" },
+    // { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
+    // { name: "x",        url: "https://x.com/intent/post?url=" },
+    // { name: "telegram", url: "https://t.me/share/url?url=" },
+    // { name: "pinterest", url: "https://pinterest.com/pin/create/button/?url=" },
+    // { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
   ],
 });
