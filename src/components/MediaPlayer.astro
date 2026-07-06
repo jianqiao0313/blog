@@ -7,6 +7,14 @@
  * follows the site theme.
  */
 
+type HtmlMediaSource = {
+  src: string;
+  /** MIME type for this source. */
+  mime?: string;
+  /** Quality label used by Plyr, for example 1080 or 720. */
+  size?: number;
+};
+
 interface Props {
   /** Source kind. */
   type?: "video" | "audio" | "youtube" | "vimeo";
@@ -14,33 +22,72 @@ interface Props {
    * Source. For `video`/`audio` a media URL; for `youtube`/`vimeo` the
    * video id or full watch URL.
    */
-  src: string;
+  src?: string;
+  /**
+   * Multiple HTML5 sources. Add `size` for video quality selection.
+   * Example: `{ src: "/video-720p.mp4", mime: "video/mp4", size: 720 }`.
+   */
+  sources?: HtmlMediaSource[];
   /** Poster image (video only). */
   poster?: string;
   /** MIME type for HTML5 sources (defaults based on `type`). */
   mime?: string;
+  /** Default video quality when multiple sized sources are provided. */
+  defaultQuality?: number;
   class?: string;
 }
 
-const { type = "video", src, poster, mime, class: className } = Astro.props;
+const {
+  type = "video",
+  src,
+  sources,
+  poster,
+  mime,
+  defaultQuality,
+  class: className,
+} = Astro.props;
 
 const isEmbed = type === "youtube" || type === "vimeo";
 const videoMime = mime ?? "video/mp4";
 const audioMime = mime ?? "audio/mpeg";
+const sourceList =
+  sources?.length && !isEmbed ? sources : src ? [{ src, mime }] : [];
+const qualityOptions = [
+  ...new Set(
+    sourceList
+      .map(source => source.size)
+      .filter((size): size is number => typeof size === "number")
+  ),
+].sort((a, b) => b - a);
+const qualityDefault = defaultQuality ?? qualityOptions[0];
 ---
 
-<div class:list={["plyr-mount not-prose", className]}>
+<div
+  class:list={["plyr-mount not-prose", className]}
+  data-quality-options={qualityOptions.length > 1
+    ? JSON.stringify(qualityOptions)
+    : undefined}
+  data-quality-default={qualityDefault}
+>
   {
     type === "video" && (
       <video class="plyr-media" playsinline controls poster={poster}>
-        <source src={src} type={videoMime} />
+        {sourceList.map(source => (
+          <source
+            src={source.src}
+            type={source.mime ?? videoMime}
+            {...(source.size ? { size: source.size } : {})}
+          />
+        ))}
       </video>
     )
   }
   {
     type === "audio" && (
       <audio class="plyr-media" controls>
-        <source src={src} type={audioMime} />
+        {sourceList.map(source => (
+          <source src={source.src} type={source.mime ?? audioMime} />
+        ))}
       </audio>
     )
   }
@@ -49,7 +96,7 @@ const audioMime = mime ?? "audio/mpeg";
       <div
         class="plyr-media"
         data-plyr-provider={type}
-        data-plyr-embed-id={src}
+        data-plyr-embed-id={src ?? ""}
       />
     )
   }
@@ -75,7 +122,24 @@ const audioMime = mime ?? "audio/mpeg";
     media.forEach(el => {
       if (el.dataset.initialized) return;
       el.dataset.initialized = "true";
-      instances.push(new Plyr(el));
+      const mount = el.closest<HTMLElement>(".plyr-mount");
+      const qualityOptions = JSON.parse(
+        mount?.dataset.qualityOptions ?? "[]"
+      ) as number[];
+      const qualityDefault = Number(mount?.dataset.qualityDefault);
+      const options =
+        qualityOptions.length > 1
+          ? {
+              quality: {
+                default: Number.isFinite(qualityDefault)
+                  ? qualityDefault
+                  : qualityOptions[0],
+                options: qualityOptions,
+              },
+            }
+          : undefined;
+
+      instances.push(new Plyr(el, options));
     });
   }
 
