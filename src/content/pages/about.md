@@ -9,7 +9,7 @@ description: "关于我和这个博客。"
 
 ## 联系我
 
-- Email：[jianqiao0313@gmail.com](mailto:jianqiao0313@gmail.com)
+- Email：[admin@lvjianqiao.com](mailto:admin@lvjianqiao.com)
 - GitHub：[github.com/jianqiao0313](https://github.com/jianqiao0313)
 - VX: NaturalSelectAhead4
 - QQ: 924472955
