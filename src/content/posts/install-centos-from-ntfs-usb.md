@@ -5,6 +5,7 @@ description: "介绍在 NTFS 格式 U 盘上安装 CentOS 的方法：通过 Win
 tags:
   - "Linux"
 ---
+
 ## 目录
 
 ## 目标
@@ -52,6 +53,7 @@ U盘不是exFat和ext4格式的，如果是这两个格式，大可不必单独�
 > 注：ext4格式的就是刚才分区的盘，里面放的是centos镜像，ntfs是我的u盘，vfat是大白菜UEFI版本生成的PE系统
 
 ### 在Install Centos界面，按TAB，然后把下图的2修改为：vmlinuz initrd=initrd.img inst.stage2=hd:/sda1/ quiet
+
 ![image](https://static.gezichenshan.top/blog/ntfs-centos/7.png)
 
 ### 剩下的就是centos自己的安装流程了

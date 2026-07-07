@@ -28,8 +28,8 @@
       try {
         abcjs.renderAbc(el, abc, { responsive: "resize", add_classes: true });
         el.dataset.abcRendered = "true";
-      } catch (err) {
-        console.error("abcjs render failed", err);
+      } catch {
+        el.dataset.abcRendered = "error";
       }
     });
   }

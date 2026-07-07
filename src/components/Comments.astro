@@ -17,11 +17,7 @@ interface Props {
   class?: string;
 }
 
-const {
-  serverURL = WALINE_SERVER_URL,
-  path,
-  class: className,
-} = Astro.props;
+const { serverURL = WALINE_SERVER_URL, path, class: className } = Astro.props;
 ---
 
 <section class:list={["mt-8", className]} aria-label="Comments">

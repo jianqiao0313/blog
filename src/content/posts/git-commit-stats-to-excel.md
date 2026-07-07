@@ -5,9 +5,11 @@ description: "介绍如何通过 git log 命令结合 Shell 脚本统计仓库�
 tags:
   - "Git"
 ---
+
 ## 目录
 
 ## 背景
+
 之前比较好奇，想看一个仓库所有人的提交次数，修改的行数，如下图（vue仓库）
 ![image](https://static.gezichenshan.top/blog/git/count/1.png)
 
@@ -32,6 +34,7 @@ git log --pretty='%ae'| sort | uniq -c | sort -k1 -n -r | head -n 50
 ![image](https://static.gezichenshan.top/blog/git/count/2.png)
 
 ### 2、获取指定人提交的
+
 ```
 git log --author="yyx990803@gmail.com" --pretty=tformat: --numstat  | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s",add,subs,loc }' -
 ```
@@ -42,6 +45,7 @@ git log --author="yyx990803@gmail.com" --pretty=tformat: --numstat  | gawk '{ ad
 ![image](https://static.gezichenshan.top/blog/git/count/3.png)
 
 ### 3、写shell脚本，把第一步和第二步串起来
+
 ```
 #!/bin/bash
 # 最终输出的字符串
@@ -96,10 +100,12 @@ echo $outString
 echo $outString > ./count.txt
 
 ```
+
 命令运行结果如下图
 ![image](https://static.gezichenshan.top/blog/git/count/4.png)
 
 ## 那如果想把每个月的提交次数都统计出来怎么耍？
+
 ### 加个for循环，依次遍历往前的n个月
 
 ```
@@ -141,7 +147,7 @@ do
    # 打印提交次数和用户git id。例如：1390 liuyong 896 zhangjiele
    echo $nameCommmitArr;
    # 把字符串转换为数组  arr[0]是提交次数   arr[1]是用户git id。
-   tempNameCommitArr=(${nameCommmitArr//\n\r/})  
+   tempNameCommitArr=(${nameCommmitArr//\n\r/})
    # 定义一个循环变量i
    i=0;
    # for循环 为的是新建两个数组：提交次数数组和用户git id数组
@@ -149,13 +155,13 @@ do
    do
       temp=`expr $i % 2`;
       if [ $temp == 0 ]
-      then 
+      then
          commitArr[${#commitArr[@]}]=$var
       else
          nameArr[${#nameArr[@]}]=$var
       fi
       i=`expr $i + 1`;
-   done 
+   done
    nameArrLen=${#nameArr[@]};
    echo "nameArr数组元素为：${nameArr[@]}";
    echo "commitArr数组元素为：${commitArr[@]}";
@@ -184,12 +190,14 @@ echo -e $outString > ./gitCount.txt
 ## 拿到上面的统计结果，想放入excel里查看怎么做？
 
 ### 安装node-xlsl库
+
 ```
 npm init
 npm i node-xlsx
 ```
 
 package.json如下：
+
 ```
 {
   "name": "count",
@@ -209,6 +217,7 @@ package.json如下：
 ```
 
 index.js如下
+
 ```
 const fs = require('fs');
 const readline = require('readline');
@@ -297,6 +306,7 @@ function execExcel(excelObj) {
 ```
 
 ### 运行命令后就会生成excel文件了
+
 ```
 node index.js
 ```

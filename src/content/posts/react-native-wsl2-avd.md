@@ -6,9 +6,11 @@ tags:
   - "React Native"
   - "WSL"
 ---
+
 ## 目录
 
 ## 背景
+
 WSL2已经出了一些日子了，对比WSL1，WSL2是跑在虚拟机中的完整 Linux，所以功能方面要比WSL强大一些。并且linux环境刷Node问题会少些，比如node_sass不好安装、NodeModules路径名过长等等。
 
 ### WSL2 缺点
@@ -19,12 +21,15 @@ WSL2已经出了一些日子了，对比WSL1，WSL2是跑在虚拟机中的完�
 ## 开搞
 
 ### Windows wsl版本、adb版本、adb devices
+
 ![image](https://static.gezichenshan.top/blog/wsl/1.png)
 
 ### 确保Window 已经配好Android + RN的环境了
+
 如果没配置好，可以参考[官方文档](https://reactnative.cn/docs/getting-started.html)，教程写的还是不错的。
 
 ### 配置WSL2中Android环境
+
 **注意把代码中的<user>改为你自己的用户名噢，一共有三处**
 
 **为了防止有些小伙伴没法下载sdk-tools-linux-4333796.zip, 我把这文件放到CDN上了，[点击这里下载](https://static.gezichenshan.top/blog/wsl/sdk-tools-linux-4333796.zip)**
@@ -52,23 +57,30 @@ adb start-server
 ```
 
 ### 在WSL2中映射Windows环境的ADB
+
 > 如果不映射的话，会出现windows下powershell运行adb devices会出现模拟器，但是在wsl2中运行adb devices会出现空列表。如下图：
 
 ![image](https://static.gezichenshan.top/blog/wsl/2.png)
 
 > 用vim打开.bashrc
+
 ```
 sudo vim ~/.bashrc
 ```
+
 > 设置adb.exe和fastboot.exe别名
+
 ```
 alias adb='adb.exe'
 alias fastboot='fastboot.exe'
 ```
+
 > 重新载入
+
 ```
 source .bashrc
 ```
+
 > 在WSL2中运行abd devices，会出现跟powershell中一样的设备了，如下图
 
 ![image](https://static.gezichenshan.top/blog/wsl/3.png)
@@ -84,12 +96,15 @@ $WSL_CLIENT -match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}';
 $WSL_CLIENT = $matches[0];
 iex "netsh interface portproxy add v4tov4 listenport=8081 listenaddress=127.0.0.1 connectport=8081 connectaddress=$WSL_CLIENT"
 ```
+
 > 如果你想看WSL的IP地址，可以用下面的命令
+
 ```
 echo $WSL_CLIENT
 ```
 
 ### 在WSL2中运行React Native
+
 ```
 npx react-native start
 ```
@@ -101,13 +116,16 @@ npx react-native start
 ## 其他注意事项
 
 ### 把项目放在WSL2中
+
 > 不要放在windows文件夹下，然后拿/mnt/c/xxx这种方式来访问项目，目前windows和WSL2通讯很慢的。直接在把项目放在WSL2中，你会感受到飞一般的速度。
 
 > VSCODE可以安装**Remote - WSL**这个扩展，它可以打开你WSL2中的目录
 
 ## 参考资料
+
 - [Building a react native app in WSL2【重点参考】](https://gist.github.com/bergmannjg/461958db03c6ae41a66d264ae6504ade#enable-access-to-metro-bundler-from-windows)
-> 如果打不开上面的链接，[可以点这里](http://static.gezichenshan.top/blog/wsl/rearct-native-app-in-wsl2.md)
+
+  > 如果打不开上面的链接，[可以点这里](http://static.gezichenshan.top/blog/wsl/rearct-native-app-in-wsl2.md)
 
 - [WSL 和 WSL2 简单对比](https://www.v2ex.com/t/587642)
 - [WSL2 中使用adb fastboot 的方法](https://blog.csdn.net/haohaoyue01/article/details/106489387)

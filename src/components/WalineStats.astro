@@ -67,8 +67,14 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
       aborts = [pageviewCount({ serverURL }), commentCount({ serverURL })];
     };
     if ("requestIdleCallback" in window) {
-      (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void })
-        .requestIdleCallback(fetchCounts, { timeout: 2000 });
+      (
+        window as Window & {
+          requestIdleCallback: (
+            cb: () => void,
+            opts?: { timeout: number }
+          ) => void;
+        }
+      ).requestIdleCallback(fetchCounts, { timeout: 2000 });
     } else {
       setTimeout(fetchCounts, 200);
     }

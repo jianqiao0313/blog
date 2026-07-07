@@ -2,3 +2,5 @@ allowBuilds:
   core-js: false
   esbuild: true
   sharp: true
+overrides:
+  esbuild: 0.28.1
