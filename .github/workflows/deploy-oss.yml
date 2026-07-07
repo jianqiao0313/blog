@@ -3,6 +3,9 @@ name: Build and deploy to Aliyun OSS
 # Builds the site on every push to main, then incrementally uploads dist/ to the
 # OSS bucket. Upload is content-based (rclone --checksum compares MD5/ETag, not
 # mtime), so a fresh build only transfers files whose content actually changed.
+# Hashed Astro/Pagefind assets are uploaded but not deleted during deploy: CDN
+# edges can keep older HTML for a short window, and that HTML still points at
+# old hashes.
 
 on:
   push:
@@ -78,13 +81,9 @@ jobs:
             exit 1
           fi
 
-          # Content-based incremental MIRROR (sync):
-          #   --checksum         compare by MD5/ETag, ignore mtime (true incremental)
-          #   --fast-list        bulk-list the bucket in one pass (fewer API calls)
-          #   --s3-no-check-bucket  don't require bucket-create/head permission
-          #   sync               mirror dist/ -> bucket: uploads changed files AND
-          #                      deletes bucket objects no longer present in dist
-          rclone sync ./dist "OSS:jianqiao0313-blog" \
+          # Upload all current files first so newly published HTML never points
+          # at an asset that has not reached the bucket yet.
+          rclone copy ./dist "OSS:jianqiao0313-blog" \
             --checksum \
             --fast-list \
             --s3-no-check-bucket \
@@ -92,3 +91,40 @@ jobs:
             --checkers 16 \
             --stats-one-line \
             -v
+
+          # Mirror route HTML and other non-fingerprinted files, but keep old
+          # /_astro and pagefind hashes. CDN edges may serve older HTML until
+          # their TTL expires; deleting old hashes during that window causes
+          # asset 404s.
+          rclone sync ./dist "OSS:jianqiao0313-blog" \
+            --checksum \
+            --fast-list \
+            --s3-no-check-bucket \
+            --exclude "/_astro/**" \
+            --exclude "/pagefind/**" \
+            --transfers 16 \
+            --checkers 16 \
+            --stats-one-line \
+            -v
+
+      - name: Refresh Aliyun CDN cache
+        env:
+          ALIBABA_CLOUD_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          ALIBABA_CLOUD_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          ALIBABA_CLOUD_REGION: ${{ vars.ALIBABA_CLOUD_REGION || 'cn-hangzhou' }}
+          CDN_REFRESH_OBJECT_PATH: ${{ vars.CDN_REFRESH_OBJECT_PATH || 'https://lvjianqiao.com/' }}
+        run: |
+          set -euo pipefail
+          if [ -z "${ALIBABA_CLOUD_ACCESS_KEY_ID:-}" ]; then
+            echo "::warning::OSS secrets are not configured — CDN refresh was skipped."
+            exit 0
+          fi
+
+          /bin/bash -c "$(curl -fsSL https://aliyuncli.alicdn.com/install.sh)"
+          aliyun version
+          aliyun plugin install --names cdn
+
+          aliyun cdn RefreshObjectCaches \
+            --region "$ALIBABA_CLOUD_REGION" \
+            --ObjectPath "$CDN_REFRESH_OBJECT_PATH" \
+            --ObjectType Directory
