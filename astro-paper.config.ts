@@ -34,6 +34,7 @@ export default defineAstroPaperConfig({
     { name: "music163", url: "https://music.163.com/user/home?id=75231240"},
     { name: "steam", url: "https://steamcommunity.com/id/jianqiao0313/" },
     { name: "github", url: "https://github.com/jianqiao0313" },
+    { name: "v2ex", url: "https://www.v2ex.com/member/jianqiao031313" },
     { name: "mail",   url: "mailto:jianqiao0313@126.com" },
   ],
   shareLinks: [
