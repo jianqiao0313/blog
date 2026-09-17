@@ -22,7 +22,7 @@ WSL2已经出了一些日子了，对比WSL1，WSL2是跑在虚拟机中的完�
 
 ### Windows wsl版本、adb版本、adb devices
 
-![image](https://static.gezichenshan.top/blog/wsl/1.png)
+![image](https://static.xiaogezi.fun/images/wsl/1.png)
 
 ### 确保Window 已经配好Android + RN的环境了
 
@@ -32,7 +32,7 @@ WSL2已经出了一些日子了，对比WSL1，WSL2是跑在虚拟机中的完�
 
 **注意把代码中的<user>改为你自己的用户名噢，一共有三处**
 
-**为了防止有些小伙伴没法下载sdk-tools-linux-4333796.zip, 我把这文件放到CDN上了，[点击这里下载](https://static.gezichenshan.top/blog/wsl/sdk-tools-linux-4333796.zip)**
+**为了防止有些小伙伴没法下载sdk-tools-linux-4333796.zip, 我把这文件放到CDN上了，[点击这里下载](https://static.xiaogezi.fun/images/wsl/sdk-tools-linux-4333796.zip)**
 
 ```
 cd /home/<user>/
@@ -60,7 +60,7 @@ adb start-server
 
 > 如果不映射的话，会出现windows下powershell运行adb devices会出现模拟器，但是在wsl2中运行adb devices会出现空列表。如下图：
 
-![image](https://static.gezichenshan.top/blog/wsl/2.png)
+![image](https://static.xiaogezi.fun/images/wsl/2.png)
 
 > 用vim打开.bashrc
 
@@ -83,7 +83,7 @@ source .bashrc
 
 > 在WSL2中运行abd devices，会出现跟powershell中一样的设备了，如下图
 
-![image](https://static.gezichenshan.top/blog/wsl/3.png)
+![image](https://static.xiaogezi.fun/images/wsl/3.png)
 
 ### 让WSL2的metro bundle可以被模拟器访问
 
@@ -125,7 +125,7 @@ npx react-native start
 
 - [Building a react native app in WSL2【重点参考】](https://gist.github.com/bergmannjg/461958db03c6ae41a66d264ae6504ade#enable-access-to-metro-bundler-from-windows)
 
-  > 如果打不开上面的链接，[可以点这里](http://static.gezichenshan.top/blog/wsl/rearct-native-app-in-wsl2.md)
+  > 如果打不开上面的链接，[可以点这里](http://static.xiaogezi.fun/images/wsl/rearct-native-app-in-wsl2.md)
 
 - [WSL 和 WSL2 简单对比](https://www.v2ex.com/t/587642)
 - [WSL2 中使用adb fastboot 的方法](https://blog.csdn.net/haohaoyue01/article/details/106489387)

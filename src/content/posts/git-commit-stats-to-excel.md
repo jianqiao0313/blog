@@ -11,7 +11,7 @@ tags:
 ## 背景
 
 之前比较好奇，想看一个仓库所有人的提交次数，修改的行数，如下图（vue仓库）
-![image](https://static.gezichenshan.top/blog/git/count/1.png)
+![image](https://static.xiaogezi.fun/images/git/1.png)
 
 输出的格式为：作者邮箱、提交次数、增加的行数、删除的行数、净增加行数
 
@@ -31,7 +31,7 @@ git log --pretty='%ae'| sort | uniq -c | sort -k1 -n -r | head -n 50
 ```
 
 命令运行结果如下图
-![image](https://static.gezichenshan.top/blog/git/count/2.png)
+![image](https://static.xiaogezi.fun/images/git/2.png)
 
 ### 2、获取指定人提交的
 
@@ -42,7 +42,7 @@ git log --author="yyx990803@gmail.com" --pretty=tformat: --numstat  | gawk '{ ad
 --author输入咱们之前提取的邮箱即可，如上面所示，填入的是尤雨溪的邮箱
 
 命令运行结果如下图
-![image](https://static.gezichenshan.top/blog/git/count/3.png)
+![image](https://static.xiaogezi.fun/images/git/3.png)
 
 ### 3、写shell脚本，把第一步和第二步串起来
 
@@ -102,7 +102,7 @@ echo $outString > ./count.txt
 ```
 
 命令运行结果如下图
-![image](https://static.gezichenshan.top/blog/git/count/4.png)
+![image](https://static.xiaogezi.fun/images/git/4.png)
 
 ## 那如果想把每个月的提交次数都统计出来怎么耍？
 
@@ -185,7 +185,7 @@ echo -e $outString > ./gitCount.txt
 ```
 
 命令运行结果如下图(gitCount.txt文件)
-![image](https://static.gezichenshan.top/blog/git/count/5.png)
+![image](https://static.xiaogezi.fun/images/git/5.png)
 
 ## 拿到上面的统计结果，想放入excel里查看怎么做？
 
@@ -312,4 +312,4 @@ node index.js
 ```
 
 最终生成的excel文件如下图：
-![image](https://static.gezichenshan.top/blog/git/count/6.png)
+![image](https://static.xiaogezi.fun/images/git/6.png)
