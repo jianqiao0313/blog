@@ -59,7 +59,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
         欢迎阅读下面的文章，或前往
         <LinkButton
           class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="/about"
+          href={getRelativeLocaleUrl(locale, "about")}
         >
           关于页
         </LinkButton> 了解更多。
