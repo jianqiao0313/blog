@@ -31,20 +31,50 @@ const {
 } = Astro.props;
 
 const options = { mini, fixed, listFolded, lrcType };
+const fallbackTrack = Array.isArray(audio) ? audio[0] : audio;
 ---
 
 <div
-  class:list={["aplayer-mount not-prose", className]}
+  class:list={[
+    "aplayer-mount not-prose",
+    fixed && "aplayer-mount--fixed",
+    className,
+  ]}
   data-audio={JSON.stringify(audio)}
   data-options={JSON.stringify(options)}
 >
+  {
+    fallbackTrack?.url && (
+      <audio controls preload="none" src={fallbackTrack.url} />
+    )
+  }
 </div>
 
-<script>
-  import APlayer from "aplayer";
-  import "aplayer/dist/APlayer.min.css";
+<style is:global>
+  .aplayer-mount:not(.aplayer-mount--fixed) {
+    min-height: 66px;
+  }
 
-  const instances: APlayer[] = [];
+  .aplayer-mount > audio {
+    width: 100%;
+  }
+
+  .aplayer-mount--fixed > audio {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+  }
+</style>
+
+<script>
+  import type APlayer from "aplayer";
+
+  const instances = new Map<HTMLElement, APlayer>();
+  const pending = new Map<HTMLElement, number>();
+  let observer: IntersectionObserver | null = null;
+  let generation = 0;
 
   function accentColor() {
     return (
@@ -54,39 +84,85 @@ const options = { mini, fixed, listFolded, lrcType };
     );
   }
 
-  function initPlayers() {
-    const mounts = document.querySelectorAll<HTMLElement>(".aplayer-mount");
-    mounts.forEach(mount => {
-      if (mount.dataset.initialized) return;
-      mount.dataset.initialized = "true";
+  async function initPlayer(mount: HTMLElement) {
+    if (instances.has(mount) || pending.has(mount)) return;
+    const currentGeneration = generation;
+    pending.set(mount, currentGeneration);
 
+    try {
+      const [{ default: APlayer }] = await Promise.all([
+        import("aplayer"),
+        import("aplayer/dist/APlayer.min.css"),
+      ]);
+      if (generation !== currentGeneration || !mount.isConnected) return;
       const audio = JSON.parse(mount.dataset.audio || "[]");
       const options = JSON.parse(mount.dataset.options || "{}");
+      instances.set(
+        mount,
+        new APlayer({
+          container: mount,
+          theme: accentColor(),
+          audio,
+          ...options,
+          preload: "none",
+        })
+      );
+    } catch (error) {
+      if (generation === currentGeneration && mount.isConnected) {
+        if (typeof reportError === "function") reportError(error);
+        // Keep enhancement failures diagnosable in older browsers as well.
+        // eslint-disable-next-line no-console
+        else console.error("Player enhancement failed", error);
+      }
+    } finally {
+      if (pending.get(mount) === currentGeneration) pending.delete(mount);
+    }
+  }
 
-      const player = new APlayer({
-        container: mount,
-        theme: accentColor(),
-        audio,
-        ...options,
-      });
-      instances.push(player);
+  function observePlayers() {
+    observer?.disconnect();
+    observer = null;
+    const mounts = document.querySelectorAll<HTMLElement>(".aplayer-mount");
+    if (typeof IntersectionObserver === "undefined") {
+      mounts.forEach(mount => void initPlayer(mount));
+      return;
+    }
+    observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting)
+            void initPlayer(entry.target as HTMLElement);
+        });
+      },
+      { rootMargin: "400px" }
+    );
+    mounts.forEach(mount => {
+      if (instances.has(mount) || pending.has(mount)) return;
+      // A fixed player is visible even when its document marker is offscreen.
+      if (JSON.parse(mount.dataset.options || "{}").fixed) {
+        void initPlayer(mount);
+      } else {
+        observer?.observe(mount);
+      }
     });
   }
 
   function destroyPlayers() {
-    while (instances.length) {
+    generation++;
+    observer?.disconnect();
+    observer = null;
+    for (const player of instances.values()) {
       try {
-        instances.pop()?.destroy();
+        player.destroy();
       } catch {
         /* already gone */
       }
     }
+    instances.clear();
+    pending.clear();
   }
 
-  // Run now (module scripts are deferred, so the DOM is ready) to cover the
-  // initial load, then on every client-side navigation. `initPlayers` is
-  // idempotent via the `data-initialized` guard, so double-calls are no-ops.
-  initPlayers();
-  document.addEventListener("astro:page-load", initPlayers);
+  observePlayers();
+  document.addEventListener("astro:page-load", observePlayers);
   document.addEventListener("astro:before-swap", destroyPlayers);
 </script>

@@ -48,6 +48,14 @@ const {
 } = Astro.props;
 
 const isEmbed = type === "youtube" || type === "vimeo";
+const embedFallbackUrl =
+  isEmbed && src
+    ? src.startsWith("http")
+      ? src
+      : type === "youtube"
+        ? `https://www.youtube.com/watch?v=${src}`
+        : `https://vimeo.com/${src}`
+    : undefined;
 const videoMime = mime ?? "video/mp4";
 const audioMime = mime ?? "audio/mpeg";
 const sourceList =
@@ -63,7 +71,11 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
 ---
 
 <div
-  class:list={["plyr-mount not-prose", className]}
+  class:list={[
+    "plyr-mount not-prose",
+    (type === "video" || isEmbed) && "plyr-mount--video",
+    className,
+  ]}
   data-quality-options={qualityOptions.length > 1
     ? JSON.stringify(qualityOptions)
     : undefined}
@@ -71,7 +83,13 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
 >
   {
     type === "video" && (
-      <video class="plyr-media" playsinline controls poster={poster}>
+      <video
+        class="plyr-media"
+        playsinline
+        controls
+        preload="none"
+        poster={poster}
+      >
         {sourceList.map(source => (
           <source
             src={source.src}
@@ -84,7 +102,7 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
   }
   {
     type === "audio" && (
-      <audio class="plyr-media" controls>
+      <audio class="plyr-media" controls preload="none">
         {sourceList.map(source => (
           <source src={source.src} type={source.mime ?? audioMime} />
         ))}
@@ -94,15 +112,43 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
   {
     isEmbed && (
       <div
-        class="plyr-media"
+        class="plyr-media plyr-embed-fallback"
         data-plyr-provider={type}
         data-plyr-embed-id={src ?? ""}
-      />
+      >
+        {embedFallbackUrl && (
+          <a href={embedFallbackUrl} target="_blank" rel="noopener noreferrer">
+            在原站观看视频
+          </a>
+        )}
+      </div>
     )
   }
 </div>
 
 <style is:global>
+  .plyr-mount--video {
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+
+  .plyr-mount--video > .plyr-media,
+  .plyr-mount--video > .plyr {
+    width: 100%;
+    height: 100%;
+  }
+
+  .plyr-embed-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .plyr-embed-fallback > a {
+    color: white;
+    text-decoration: underline;
+  }
+
   /* Tie Plyr's accent to the site theme. */
   .plyr {
     --plyr-color-main: var(--accent);
@@ -110,23 +156,30 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
 </style>
 
 <script>
-  import Plyr from "plyr";
-  import "plyr/dist/plyr.css";
+  import type Plyr from "plyr";
 
-  const instances: Plyr[] = [];
+  const instances = new Map<HTMLElement, Plyr>();
+  const pending = new Map<HTMLElement, number>();
+  let observer: IntersectionObserver | null = null;
+  let generation = 0;
 
-  function initPlayers() {
-    const media = document.querySelectorAll<HTMLElement>(
-      ".plyr-mount .plyr-media"
-    );
-    media.forEach(el => {
-      if (el.dataset.initialized) return;
-      el.dataset.initialized = "true";
-      const mount = el.closest<HTMLElement>(".plyr-mount");
+  async function initPlayer(mount: HTMLElement) {
+    if (instances.has(mount) || pending.has(mount)) return;
+    const currentGeneration = generation;
+    pending.set(mount, currentGeneration);
+
+    try {
+      const [{ default: Plyr }] = await Promise.all([
+        import("plyr"),
+        import("plyr/dist/plyr.css"),
+      ]);
+      if (generation !== currentGeneration || !mount.isConnected) return;
+      const el = mount.querySelector<HTMLElement>(".plyr-media");
+      if (!el) return;
       const qualityOptions = JSON.parse(
-        mount?.dataset.qualityOptions ?? "[]"
+        mount.dataset.qualityOptions ?? "[]"
       ) as number[];
-      const qualityDefault = Number(mount?.dataset.qualityDefault);
+      const qualityDefault = Number(mount.dataset.qualityDefault);
       const options =
         qualityOptions.length > 1
           ? {
@@ -139,24 +192,58 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
             }
           : undefined;
 
-      instances.push(new Plyr(el, options));
+      instances.set(mount, new Plyr(el, options));
+    } catch (error) {
+      if (generation === currentGeneration && mount.isConnected) {
+        if (typeof reportError === "function") reportError(error);
+        // Keep enhancement failures diagnosable in older browsers as well.
+        // eslint-disable-next-line no-console
+        else console.error("Player enhancement failed", error);
+      }
+    } finally {
+      if (pending.get(mount) === currentGeneration) pending.delete(mount);
+    }
+  }
+
+  function observePlayers() {
+    observer?.disconnect();
+    observer = null;
+    const mounts = document.querySelectorAll<HTMLElement>(".plyr-mount");
+    if (typeof IntersectionObserver === "undefined") {
+      mounts.forEach(mount => void initPlayer(mount));
+      return;
+    }
+    observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting)
+            void initPlayer(entry.target as HTMLElement);
+        });
+      },
+      { rootMargin: "400px" }
+    );
+    mounts.forEach(mount => {
+      if (!instances.has(mount) && !pending.has(mount))
+        observer?.observe(mount);
     });
   }
 
   function destroyPlayers() {
-    while (instances.length) {
+    generation++;
+    observer?.disconnect();
+    observer = null;
+    for (const player of instances.values()) {
       try {
-        instances.pop()?.destroy();
+        player.destroy();
       } catch {
         /* already gone */
       }
     }
+    instances.clear();
+    pending.clear();
   }
 
-  // Run now (module scripts are deferred, so the DOM is ready) to cover the
-  // initial load, then on every client-side navigation. `initPlayers` is
-  // idempotent via the `data-initialized` guard, so double-calls are no-ops.
-  initPlayers();
-  document.addEventListener("astro:page-load", initPlayers);
+  observePlayers();
+  document.addEventListener("astro:page-load", observePlayers);
   document.addEventListener("astro:before-swap", destroyPlayers);
 </script>

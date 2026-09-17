@@ -12,6 +12,7 @@ import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import { remarkAbcMusic } from "./src/utils/remarkAbcMusic";
 import { rehypeImgAttrs } from "./src/utils/rehypeImgAttrs";
+import imageDimensions from "./src/assets/image-dimensions.json";
 import rehypeCallouts from "rehype-callouts";
 import {
   transformerNotationDiff,
@@ -51,7 +52,8 @@ export default defineConfig({
         ],
         [remarkCollapse, { test: "目录|Table of contents" }],
       ],
-      rehypePlugins: [rehypeCallouts, rehypeImgAttrs],
+      // Keep measured dimensions in the config digest so edits invalidate cached HTML.
+      rehypePlugins: [rehypeCallouts, [rehypeImgAttrs, imageDimensions]],
     }),
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },

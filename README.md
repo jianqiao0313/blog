@@ -23,6 +23,8 @@ pnpm build      # 生产构建（含 astro check + pagefind 搜索索引）
 pnpm preview    # 预览构建产物
 ```
 
+`pnpm build` 会重新生成 Pagefind 索引，并更新用于本地开发的 `public/pagefind` 缓存。修改文章后，运行一次构建即可在 `pnpm dev` 中查看最新搜索结果。
+
 ## 写文章
 
 在 `src/content/posts/` 下新建 `.md` 文件，frontmatter 至少包含：
@@ -38,6 +40,8 @@ tags:
 ```
 
 正文里可用 `## 目录` 生成目录、用 ` ```abc ` 代码块插入五线谱。
+
+新增或替换远程 Markdown 图片时，测量原图尺寸并更新 `src/assets/image-dimensions.json`。已有 HTML `width`/`height` 会保留；`pnpm test` 会检查当前文章的图片尺寸元数据。构建时不会请求图片 CDN。
 
 ## 部署
 

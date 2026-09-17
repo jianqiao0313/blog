@@ -1,9 +1,7 @@
-/**
- * rehype plugin: add `loading="lazy"` and `decoding="async"` to every <img>
- * in post content (the posts use 150+ external CDN images). Defers off-screen
- * image downloads and lets the browser decode them off the main thread.
- */
-export function rehypeImgAttrs() {
+/** Reserve image space while preserving author sizing and loading priority. */
+export function rehypeImgAttrs(
+  dimensions: Record<string, { width: number; height: number }> = {}
+) {
   return (tree: any) => {
     const walk = (node: any) => {
       if (!node) return;
@@ -12,6 +10,23 @@ export function rehypeImgAttrs() {
         if (node.properties.loading == null) node.properties.loading = "lazy";
         if (node.properties.decoding == null)
           node.properties.decoding = "async";
+
+        const size = dimensions[node.properties.src];
+        if (size) {
+          const { width, height } = node.properties;
+          if (width == null && height == null) {
+            node.properties.width = size.width;
+            node.properties.height = size.height;
+          } else if (height == null && Number(width) > 0) {
+            node.properties.height = Math.round(
+              (Number(width) * size.height) / size.width
+            );
+          } else if (width == null && Number(height) > 0) {
+            node.properties.width = Math.round(
+              (Number(height) * size.width) / size.height
+            );
+          }
+        }
       }
       if (Array.isArray(node.children)) node.children.forEach(walk);
     };
