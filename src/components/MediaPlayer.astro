@@ -74,6 +74,7 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
   class:list={[
     "plyr-mount not-prose",
     (type === "video" || isEmbed) && "plyr-mount--video",
+    type === "audio" && "plyr-mount--audio",
     className,
   ]}
   data-quality-options={qualityOptions.length > 1
@@ -88,6 +89,8 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
         playsinline
         controls
         preload="none"
+        width="1600"
+        height="900"
         poster={poster}
       >
         {sourceList.map(source => (
@@ -127,15 +130,30 @@ const qualityDefault = defaultQuality ?? qualityOptions[0];
 </div>
 
 <style is:global>
+  .plyr-mount {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
   .plyr-mount--video {
     aspect-ratio: 16 / 9;
     background: #000;
   }
 
-  .plyr-mount--video > .plyr-media,
-  .plyr-mount--video > .plyr {
+  .plyr-mount--audio {
+    height: 54px;
+  }
+
+  /* Media metadata and late player styles must not resize the reserved area. */
+  .plyr-mount > .plyr-media:not(:fullscreen),
+  .plyr-mount > .plyr:not(.plyr--fullscreen-fallback):not(:fullscreen) {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+    min-width: 0;
+    margin: 0;
   }
 
   .plyr-embed-fallback {

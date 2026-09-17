@@ -32,31 +32,59 @@ const {
 
 const options = { mini, fixed, listFolded, lrcType };
 const fallbackTrack = Array.isArray(audio) ? audio[0] : audio;
+const trackCount = Array.isArray(audio) ? audio.length : 1;
+const listHeight =
+  trackCount > 1 && !listFolded && !mini
+    ? Math.min(trackCount * 33 - 1, 250)
+    : 0;
+const reservedHeight = (lrcType ? (mini ? 93 : 117) : 66) + listHeight;
 ---
 
 <div
   class:list={[
     "aplayer-mount not-prose",
     fixed && "aplayer-mount--fixed",
+    mini && "aplayer-mount--mini",
     className,
   ]}
+  style={{ "--aplayer-reserved-height": `${reservedHeight}px` }}
   data-audio={JSON.stringify(audio)}
   data-options={JSON.stringify(options)}
 >
   {
-    fallbackTrack?.url && (
-      <audio controls preload="none" src={fallbackTrack.url} />
-    )
+    fallbackTrack?.url &&
+      (mini && !fixed ? (
+        <a class="aplayer-mini-fallback" href={fallbackTrack.url}>
+          播放音频
+        </a>
+      ) : (
+        <audio controls preload="none" src={fallbackTrack.url} />
+      ))
   }
 </div>
 
 <style is:global>
   .aplayer-mount:not(.aplayer-mount--fixed) {
-    min-height: 66px;
+    min-height: var(--aplayer-reserved-height);
+    margin: 0;
+  }
+
+  .aplayer-mount--mini:not(.aplayer-mount--fixed) {
+    width: 66px;
   }
 
   .aplayer-mount > audio {
     width: 100%;
+    height: 66px;
+  }
+
+  .aplayer-mini-fallback {
+    display: grid;
+    width: 66px;
+    height: 66px;
+    place-items: center;
+    font-size: 12px;
+    text-decoration: underline;
   }
 
   .aplayer-mount--fixed > audio {
@@ -65,6 +93,7 @@ const fallbackTrack = Array.isArray(audio) ? audio[0] : audio;
     bottom: 0;
     left: 0;
     z-index: 99;
+    max-width: 400px;
   }
 </style>
 
