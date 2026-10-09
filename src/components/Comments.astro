@@ -32,50 +32,97 @@ const { serverURL = WALINE_SERVER_URL, path, class: className } = Astro.props;
 
 <script>
   type WalineInstance = { destroy: () => void } | null;
+  type InitTask = { generation: number; element: HTMLElement };
 
   let waline: WalineInstance = null;
   let io: IntersectionObserver | null = null;
+  let generation = 0;
+  let pendingInit: InitTask | null = null;
 
-  async function initWaline() {
-    const el = document.getElementById("waline");
-    if (!el || el.dataset.walineInit) return;
+  function isElementCurrent(el: HTMLElement, expectedGeneration: number) {
+    return (
+      expectedGeneration === generation &&
+      el.isConnected &&
+      document.getElementById("waline") === el
+    );
+  }
+
+  function isCurrent(task: InitTask) {
+    return (
+      pendingInit === task && isElementCurrent(task.element, task.generation)
+    );
+  }
+
+  function showLoadError(el: HTMLElement, expectedGeneration: number) {
+    const message = document.createElement("p");
+    message.textContent = "评论加载失败，请稍后重试。";
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.textContent = "重试加载评论";
+    retry.className = "mt-3 underline underline-offset-4";
+    retry.addEventListener("click", () => {
+      if (isElementCurrent(el, expectedGeneration)) {
+        void initWaline(el, expectedGeneration);
+      }
+    });
+    el.replaceChildren(message, retry);
+  }
+
+  async function initWaline(el: HTMLElement, expectedGeneration = generation) {
+    if (!isElementCurrent(el, expectedGeneration) || el.dataset.walineInit) {
+      return;
+    }
 
     const serverURL = el.dataset.serverUrl;
     if (!serverURL) return;
 
     // Guard so the observer + astro:page-load don't double-init.
-    el.dataset.walineInit = "true";
+    el.dataset.walineInit = "loading";
+    const task = { generation: expectedGeneration, element: el };
+    pendingInit = task;
 
-    // Load the Waline client (~285KB) + its styles only when the comment
-    // section is about to enter the viewport — most readers never scroll here.
-    const [{ init }] = await Promise.all([
-      import("@waline/client"),
-      import("@waline/client/style"),
-    ]);
+    try {
+      // Load the Waline client (~285KB) + its styles only when the comment
+      // section is about to enter the viewport — most readers never scroll here.
+      const [{ init }] = await Promise.all([
+        import("@waline/client"),
+        import("@waline/client/style"),
+      ]);
 
-    waline = init({
-      el: "#waline",
-      serverURL,
-      path: el.dataset.path || window.location.pathname,
-      // Match AstroPaper's dark mode: <html> gets the `dark` class.
-      dark: "html.dark",
-      lang: document.documentElement.lang || "en",
-      // Cloudflare Turnstile sitekey. Must be paired with the server's
-      // TURNSTILE_SECRET env var, otherwise anonymous comments get a 403
-      // ("Forbidden") because no challenge token is ever sent. (Logged-in
-      // users skip the captcha server-side, which is why they were unaffected.)
-      // turnstileKey: "0x4AAAAAADqn85LONdeyep8s",
-      // Article reaction emojis (👍 etc.) shown above the comment box.
-      reaction: true,
-      // Emoji picker for the comment input.
-      emoji: [
-        "https://unpkg.com/@waline/emojis@1.2.0/weibo",
-        "https://unpkg.com/@waline/emojis@1.2.0/tieba",
-      ],
-      locale: {
-        placeholder: "Leave a comment...",
-      },
-    });
+      if (!isCurrent(task)) return;
+      el.replaceChildren();
+
+      waline = init({
+        el,
+        serverURL,
+        path: el.dataset.path || window.location.pathname,
+        // Match AstroPaper's dark mode: <html> gets the `dark` class.
+        dark: "html.dark",
+        lang: document.documentElement.lang || "en",
+        // Cloudflare Turnstile sitekey. Must be paired with the server's
+        // TURNSTILE_SECRET env var, otherwise anonymous comments get a 403
+        // ("Forbidden") because no challenge token is ever sent. (Logged-in
+        // users skip the captcha server-side, which is why they were unaffected.)
+        // turnstileKey: "0x4AAAAAADqn85LONdeyep8s",
+        // Article reaction emojis (👍 etc.) shown above the comment box.
+        reaction: true,
+        // Emoji picker for the comment input.
+        emoji: [
+          "https://unpkg.com/@waline/emojis@1.2.0/weibo",
+          "https://unpkg.com/@waline/emojis@1.2.0/tieba",
+        ],
+        locale: {
+          placeholder: "Leave a comment...",
+        },
+      });
+      el.dataset.walineInit = "ready";
+      pendingInit = null;
+    } catch {
+      if (!isCurrent(task)) return;
+      pendingInit = null;
+      delete el.dataset.walineInit;
+      showLoadError(el, expectedGeneration);
+    }
   }
 
   // Defer loading until the comment box nears the viewport.
@@ -83,17 +130,24 @@ const { serverURL = WALINE_SERVER_URL, path, class: className } = Astro.props;
     const el = document.getElementById("waline");
     if (!el || el.dataset.walineInit) return;
     io?.disconnect();
-    io = new IntersectionObserver(
+    if (typeof IntersectionObserver === "undefined") {
+      void initWaline(el);
+      return;
+    }
+    const expectedGeneration = generation;
+    const observer = new IntersectionObserver(
       entries => {
         if (entries.some(e => e.isIntersecting)) {
-          io?.disconnect();
-          io = null;
-          initWaline();
+          if (!isElementCurrent(el, expectedGeneration)) return;
+          observer.disconnect();
+          if (io === observer) io = null;
+          void initWaline(el, expectedGeneration);
         }
       },
       { rootMargin: "400px" }
     );
-    io.observe(el);
+    io = observer;
+    observer.observe(el);
   }
 
   observeWaline();
@@ -101,6 +155,8 @@ const { serverURL = WALINE_SERVER_URL, path, class: className } = Astro.props;
 
   // Tear down before swapping pages to avoid leaking listeners/observers.
   document.addEventListener("astro:before-swap", () => {
+    generation++;
+    pendingInit = null;
     io?.disconnect();
     io = null;
     waline?.destroy();

@@ -25,6 +25,8 @@ pnpm preview    # 预览构建产物
 
 `pnpm build` 会重新生成 Pagefind 索引，并更新用于本地开发的 `public/pagefind` 缓存。修改文章后，运行一次构建即可在 `pnpm dev` 中查看最新搜索结果。
 
+中文 OG 分享图的字体子集缓存于 `.astro/cjk-fonts`，GitHub Actions 会跨构建恢复缓存。首次构建或新增字符时需要访问 Google Fonts；缓存命中后可离线生成对应分享图。下载、超时或字体校验失败会明确中止构建，避免发布缺字图片。每次请求（含响应体读取）默认限时 10 秒，可用 `CJK_FONT_FETCH_TIMEOUT_MS` 调整。
+
 ## 写文章
 
 在 `src/content/posts/` 下新建 `.md` 文件，frontmatter 至少包含：

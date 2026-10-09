@@ -47,8 +47,33 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
   import { pageviewCount } from "@waline/client/pageview";
   import { commentCount } from "@waline/client/comment";
 
+  type ScheduledWork =
+    | { kind: "idle"; id: number }
+    | { kind: "timeout"; id: ReturnType<typeof setTimeout> };
+
   let aborts: Array<() => void> = [];
   let lastPath = "";
+  let generation = 0;
+  let scheduledWork: ScheduledWork | undefined;
+
+  function cancelScheduledWork() {
+    if (!scheduledWork) return;
+    if (scheduledWork.kind === "idle") {
+      (
+        window as Window & {
+          cancelIdleCallback: (id: number) => void;
+        }
+      ).cancelIdleCallback(scheduledWork.id);
+    } else {
+      clearTimeout(scheduledWork.id);
+    }
+    scheduledWork = undefined;
+  }
+
+  function abortRequests() {
+    aborts.forEach(abort => abort());
+    aborts = [];
+  }
 
   function runStats() {
     const el = document.querySelector<HTMLElement>(".waline-stats");
@@ -57,27 +82,41 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
     if (!serverURL) return;
     // Avoid double-counting if this fires more than once for the same page.
     if (location.pathname === lastPath) return;
-    lastPath = location.pathname;
+    const path = location.pathname;
+    const currentGeneration = ++generation;
+    lastPath = path;
 
-    aborts.forEach(a => a());
-    aborts = [];
+    cancelScheduledWork();
+    abortRequests();
 
     // Counts are not LCP-critical — fetch them when the main thread is idle.
+    let work: ScheduledWork;
     const fetchCounts = () => {
+      if (scheduledWork === work) scheduledWork = undefined;
+      if (
+        currentGeneration !== generation ||
+        location.pathname !== path ||
+        !el.isConnected ||
+        document.querySelector(".waline-stats") !== el
+      ) {
+        return;
+      }
       aborts = [pageviewCount({ serverURL }), commentCount({ serverURL })];
     };
     if ("requestIdleCallback" in window) {
-      (
+      const id = (
         window as Window & {
           requestIdleCallback: (
             cb: () => void,
             opts?: { timeout: number }
-          ) => void;
+          ) => number;
         }
       ).requestIdleCallback(fetchCounts, { timeout: 2000 });
+      work = { kind: "idle", id };
     } else {
-      setTimeout(fetchCounts, 200);
+      work = { kind: "timeout", id: setTimeout(fetchCounts, 200) };
     }
+    scheduledWork = work;
   }
 
   // Run on initial load and on every client-side navigation; the lastPath
@@ -85,8 +124,9 @@ const { serverURL = WALINE_SERVER_URL, class: className } = Astro.props;
   runStats();
   document.addEventListener("astro:page-load", runStats);
   document.addEventListener("astro:before-swap", () => {
-    aborts.forEach(a => a());
-    aborts = [];
+    generation++;
+    cancelScheduledWork();
+    abortRequests();
     lastPath = "";
   });
 </script>

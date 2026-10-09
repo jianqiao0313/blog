@@ -15,10 +15,11 @@ on:
 permissions:
   contents: read
 
-# Never run two deploys at once; cancel an in-flight one when a newer push lands.
+# Serialize every deployment to this bucket, including manual runs from other
+# refs. Finish an active publish before starting the latest queued build.
 concurrency:
-  group: deploy-oss-${{ github.ref }}
-  cancel-in-progress: true
+  group: deploy-oss-jianqiao0313-blog
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -49,6 +50,14 @@ jobs:
 
       - name: Run regression tests
         run: pnpm test
+
+      - name: Cache Chinese OG fonts
+        uses: actions/cache@v5
+        with:
+          path: .astro/cjk-fonts
+          key: ${{ runner.os }}-cjk-fonts-v1-${{ hashFiles('src/content/**', 'src/utils/getCjkFontData.ts', 'astro-paper.config.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-cjk-fonts-v1-
 
       - name: Build site
         run: pnpm build
@@ -84,9 +93,10 @@ jobs:
             exit 1
           fi
 
-          # Upload all current files first so newly published HTML never points
-          # at an asset that has not reached the bucket yet.
+          # Finish every asset upload before making any new HTML visible.
+          # A single concurrent copy of all dist/ cannot guarantee this order.
           rclone copy ./dist "OSS:jianqiao0313-blog" \
+            --exclude "*.html" \
             --checksum \
             --fast-list \
             --s3-no-check-bucket \
@@ -95,7 +105,8 @@ jobs:
             --stats-one-line \
             -v
 
-          # Mirror route HTML and other non-fingerprinted files, but keep old
+          # Publish HTML after its assets are available and remove obsolete
+          # routes. Mirror other non-fingerprinted files too, but keep old
           # /_astro and pagefind hashes. CDN edges may serve older HTML until
           # their TTL expires; deleting old hashes during that window causes
           # asset 404s.
