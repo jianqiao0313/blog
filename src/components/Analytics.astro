@@ -1,0 +1,26 @@
+---
+// Public tracker configuration only. Administrator credentials never belong here.
+const enabled = import.meta.env.PROD;
+---
+
+{
+  enabled && (
+    <script
+      is:inline
+      async
+      id="umami-tracker"
+      transition:persist="umami-tracker"
+      src="https://umami.xiaogezi.fun:4433/script.js"
+      data-website-id="0a18d974-23c1-48c6-92a6-7a37b7bef6ff"
+      data-auto-track="false"
+      data-domains="lvjianqiao.com,www.lvjianqiao.com"
+      data-do-not-track="true"
+      data-exclude-search="true"
+      data-exclude-hash="true"
+    />
+  )
+}
+
+<script>
+  import "@/scripts/analytics";
+</script>

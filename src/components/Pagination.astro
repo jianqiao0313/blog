@@ -27,6 +27,8 @@ const t = useTranslations(Astro.currentLocale);
         href={page.url.prev as string}
         class:list={["select-none", { "opacity-50": !page.url.prev }]}
         aria-label={t.a11y.goToPreviousPage}
+        data-analytics-event="pagination_click"
+        data-analytics-label="prev"
       >
         <IconArrowLeft class="inline-block rtl:rotate-180" />
         {t.pagination.prev}
@@ -37,6 +39,8 @@ const t = useTranslations(Astro.currentLocale);
         href={page.url.next as string}
         class:list={["select-none", { "opacity-50": !page.url.next }]}
         aria-label={t.a11y.goToNextPage}
+        data-analytics-event="pagination_click"
+        data-analytics-label="next"
       >
         {t.pagination.next}
         <IconArrowRight class="inline-block rtl:rotate-180" />

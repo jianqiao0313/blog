@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
+import Analytics from "@/components/Analytics.astro";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
@@ -120,6 +121,7 @@ const rssHref = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`;
     </script>
 
     <ClientRouter />
+    <Analytics />
   </head>
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"

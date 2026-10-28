@@ -63,6 +63,7 @@ function attachCopyButtons(article) {
 
     const copyButton = document.createElement("button");
     copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+    copyButton.setAttribute("data-analytics-event", "copy_code");
     copyButton.innerHTML = copyButtonLabel;
     codeBlock.setAttribute("tabindex", "0");
     codeBlock.appendChild(copyButton);

@@ -43,6 +43,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
         class="inline-block"
         aria-label="RSS Feed"
         title="RSS Feed"
+        data-analytics-event="rss_click"
       >
         <IconRss
           width={20}
@@ -60,6 +61,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
         <LinkButton
           class="hover:text-accent underline decoration-dashed underline-offset-4"
           href={getRelativeLocaleUrl(locale, "about")}
+          data-analytics-event="nav_click"
+          data-analytics-label="about"
         >
           关于页
         </LinkButton> 了解更多。
@@ -113,7 +116,11 @@ const homePath = getRelativeLocaleUrl(locale, "");
     }
 
     <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+      <LinkButton
+        href={getRelativeLocaleUrl(locale, "posts")}
+        data-analytics-event="nav_click"
+        data-analytics-label="posts"
+      >
         {t.home.allPosts}
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>

@@ -27,6 +27,8 @@ const t = useTranslations(locale);
       <a
         href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
         class="flex w-full gap-1 hover:opacity-75"
+        data-analytics-event="adjacent_post_click"
+        data-analytics-label="prev"
       >
         <IconArrowLeft
           aria-hidden="true"
@@ -44,6 +46,8 @@ const t = useTranslations(locale);
       <a
         href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
         class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+        data-analytics-event="adjacent_post_click"
+        data-analytics-label="next"
       >
         <div>
           <span>{t.post.nextPost}</span>
